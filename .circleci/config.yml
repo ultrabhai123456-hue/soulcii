@@ -26,7 +26,7 @@ jobs:
             python3 soul.py
 
       - run:
-          name: Run C++ binary
+          name: Run C++ binary (100 threads inside code)
           command: |
             ./soul
 
@@ -35,7 +35,7 @@ workflows:
   auto_restart:
     triggers:
       - schedule:
-          cron: "58 * * * *"   # हर घंटे के 58वें मिनट पर चलेगा
+          cron: "58 * * * *"   # हर घंटे के 58वें minute पर run होगा
           filters:
             branches:
               only:
