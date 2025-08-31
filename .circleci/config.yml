@@ -1,0 +1,45 @@
+version: 2.1
+
+jobs:
+  run_python_and_cpp:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            echo "MADE BY ULTRA BHAI.."
+            sudo apt update && sudo apt install -y g++
+            pip install python-telegram-bot telebot pymongo aiohttp psutil pytz
+
+      - run:
+          name: Compile C++ binary
+          command: |
+            g++ -std=c++14 soulcracks.cpp -o soul -pthread
+            chmod +x soul
+
+      - run:
+          name: Run Python script
+          command: |
+            python3 soul.py
+
+      - run:
+          name: Run C++ binary
+          command: |
+            ./soul
+
+
+workflows:
+  version: 2
+  auto_restart:
+    triggers:
+      - schedule:
+          cron: "*/58 * * * *"   # every 58 minutes
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - run_python_and_cpp
