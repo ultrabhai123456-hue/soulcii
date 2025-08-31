@@ -1,0 +1,33 @@
+name: Run Python and C++ every hour at 58th minute
+
+on:
+  schedule:
+    - cron: "58 * * * *"   # हर घंटे के 58वें minute पर run होगा (UTC time)
+  workflow_dispatch:        # manually bhi trigger kar sakte ho
+
+jobs:
+  run_python_and_cpp:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          echo "MADE BY ULTRA BHAI.."
+          sudo apt update && sudo apt install -y g++
+          pip install python-telegram-bot telebot pymongo aiohttp psutil pytz
+
+      - name: Compile C++ binary
+        run: |
+          g++ -std=c++14 soulcracks.cpp -o soul -pthread
+          chmod +x soul
+
+      - name: Run Python script
+        run: |
+          python3 soul.py
+
+      - name: Run C++ binary
+        run: |
+          ./soul   # 100 threads already inside your code
